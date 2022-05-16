@@ -6,12 +6,6 @@ Backed with Python3, Django 4
 
 ## Installation
 
----
-
 ## Deployment
 
----
-
 ## Contribution Guide
-
----
