@@ -15,8 +15,8 @@ class Program(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     apply_start_at = models.DateTimeField()
     apply_end_at = models.DateTimeField()
-    class_start_at = models.DateTimeField()
-    class_end_at = models.DateTimeField()
+    program_start_at = models.DateTimeField()
+    program_end_at = models.DateTimeField()
     active = models.BooleanField(default=True)
 
     objects = ProgramManager()

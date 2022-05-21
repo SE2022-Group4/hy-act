@@ -5,12 +5,12 @@ from program.models import Program
 
 
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
-    created_at = TimestampField(read_only=True)
-    updated_at = TimestampField(read_only=True)
-    apply_start_at = TimestampField()
-    apply_end_at = TimestampField()
-    class_start_at = TimestampField()
-    class_end_at = TimestampField()
+    created_at = TimestampField(help_text='프로그램 생성 시간', read_only=True)
+    updated_at = TimestampField(help_text='프로그램 최종 수정 시간', read_only=True)
+    apply_start_at = TimestampField(help_text='신청 접수 시작 시간')
+    apply_end_at = TimestampField(help_text='신청 접수 종료 시간')
+    program_start_at = TimestampField(help_text='프로그램 시작 시간')
+    program_end_at = TimestampField(help_text='프로그램 종료 시간')
 
     class Meta:
         model = Program
@@ -21,6 +21,6 @@ class ProgramSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at',
             'apply_start_at',
             'apply_end_at',
-            'class_start_at',
-            'class_end_at',
+            'program_start_at',
+            'program_end_at',
         ]
