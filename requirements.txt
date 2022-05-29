@@ -3,6 +3,7 @@ attrs==21.4.0
 Django==4.0.4
 djangorestframework==3.13.1
 drf-spectacular==0.22.1
+gunicorn==20.1.0
 inflection==0.5.1
 jsonschema==4.5.1
 pyrsistent==0.18.1
