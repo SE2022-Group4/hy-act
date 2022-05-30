@@ -20,7 +20,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy rest of the project files
-COPY .. .
+COPY . .
 
 # Set file permission of docker entrypoint script file
 RUN chmod +x docker-entrypoint.sh
