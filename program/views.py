@@ -11,5 +11,11 @@ class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name']
-    filterset_fields = ['target_major']
+    filterset_fields = {
+        'category': ['exact'],
+        'sex': ['exact'],
+        'department': ['exact'],
+        'program_start_at': ['gte'],
+        'program_end_at': ['lte'],
+    }
     permission_classes = [permissions.IsAuthenticated]
