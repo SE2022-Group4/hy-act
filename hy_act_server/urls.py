@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+from hy_act_server.views import HeartBeatView
+
 urlpatterns = [    # YOUR PATTERNS
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
@@ -26,4 +28,6 @@ urlpatterns = [    # YOUR PATTERNS
     path('api/v1/admin/', admin.site.urls),
     path('api/v1/user/', include('user.urls')),
     path('api/v1/programs/', include('program.urls')),
+
+    path('heartbeat/', HeartBeatView.as_view()),
 ]
