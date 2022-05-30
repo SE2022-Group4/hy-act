@@ -23,4 +23,9 @@ class ProgramSerializer(serializers.HyperlinkedModelSerializer):
             'apply_end_at',
             'program_start_at',
             'program_end_at',
+            'thumbnail_url',
+            'location',
+            'target_grade',
+            'target_major',
+            'max_applicant_count',
         ]
