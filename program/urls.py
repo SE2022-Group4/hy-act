@@ -7,4 +7,5 @@ router.register('', views.ProgramViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('<int:pk>/apply/', views.ProgramApplyView.as_view()),
 ]

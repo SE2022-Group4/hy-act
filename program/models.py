@@ -32,11 +32,14 @@ class Program(models.Model):
     def inactivate(self):
         self.active = False
 
+    def apply(self, user):
+        Application.objects.create(program=self, student=user)
+
 
 class Application(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class AttendanceCode(models.Model):
