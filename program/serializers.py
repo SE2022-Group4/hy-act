@@ -2,8 +2,22 @@ from rest_framework import serializers
 from rest_framework.fields import IntegerField
 
 from hy_act_server.fields import TimestampField
-from program.models import Program
+from program.models import Program, Category, Department
 
+
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+        ]
+
+class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Department
+        fields = [
+            'name',
+        ]
 
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
     created_at = TimestampField(help_text='프로그램 생성 시간', read_only=True)
