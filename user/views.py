@@ -24,9 +24,6 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema(
-        parameters=[
-          UserSigninSerializer
-          ],
         request=UserSigninSerializer,
         responses=UserSigninSerializer,
         # more customizations
