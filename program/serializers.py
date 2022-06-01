@@ -9,15 +9,19 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
         fields = [
+            'id',
             'name',
         ]
+
 
 class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Department
         fields = [
+            'id',
             'name',
         ]
+
 
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
     created_at = TimestampField(help_text='프로그램 생성 시간', read_only=True)
