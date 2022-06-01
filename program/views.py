@@ -32,9 +32,6 @@ class CategoryView(APIView):
         return Response(categories_serialized.data)
 
     @extend_schema(
-        parameters=[
-            CategorySerializer
-        ],
         request=CategorySerializer,
         responses=CategorySerializer,
         # more customizations
@@ -54,9 +51,6 @@ class DepartmentView(APIView):
         return Response(departments_serialized.data)
 
     @extend_schema(
-        parameters=[
-            DepartmentSerializer
-        ],
         request=DepartmentSerializer,
         responses=DepartmentSerializer,
         # more customizations
