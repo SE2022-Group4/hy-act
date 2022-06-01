@@ -1,4 +1,3 @@
-from unicodedata import category
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework.filters import SearchFilter
@@ -9,7 +8,6 @@ from rest_framework.views import APIView
 
 from program.models import Category, Program, Department
 from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
-from user import serializers
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
@@ -50,7 +48,7 @@ class CategoryView(APIView):
 
 
 class DepartmentView(APIView):
-    def get(self):
+    def get(self, request):
         departments = Department.objects.all()
         departments_serialized = DepartmentSerializer(departments, many=True)
         return Response(departments_serialized.data)
