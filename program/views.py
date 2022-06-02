@@ -75,3 +75,23 @@ class ProgramApplyView(APIView):
         program.apply(request.user)
 
         return Response(status=status.HTTP_200_OK)
+
+
+# TODO: Implement Program Attendance Status View
+@NotImplementedError
+class ProgramAttendanceStatusView(APIView):
+    def get(self, request, *args, **kwargs):
+        pass
+
+
+@NotImplementedError
+class ProgramAttendanceCodeGenerateView(APIView):
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+# TODO: Implement Program Attendance Verify View
+@NotImplementedError
+class ProgramAttendanceCodeVerifyView(APIView):
+    def post(self, request, *args, **kwargs):
+        pass
