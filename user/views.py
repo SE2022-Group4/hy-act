@@ -1,7 +1,7 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.models import Group
 from drf_spectacular.utils import extend_schema
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, views
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -9,6 +9,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .serializers import UserSerializer, GroupSerializer, UserSigninSerializer
+
+User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -53,3 +55,12 @@ def signin(request):
         'user': user_serialized.data,
         'token': token.key,
     }, status=status.HTTP_200_OK)
+
+
+class SessionUserInfoView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        user_serialized = UserSerializer(user, context={'request': request})
+
+        return Response(user_serialized.data, status=status.HTTP_200_OK)

@@ -1,5 +1,9 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
+
+from user.models import Department
+
+User = get_user_model()
 
 
 class ProgramManager(models.Manager):
@@ -8,10 +12,6 @@ class ProgramManager(models.Manager):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-
-class Department(models.Model):
     name = models.CharField(max_length=100)
 
 
@@ -41,9 +41,6 @@ class Program(models.Model):
 
     def inactivate(self):
         self.active = False
-
-    def apply(self, user):
-        Application.objects.create(program=self, student=user)
 
     def apply(self, user):
         Application.objects.create(program=self, student=user)

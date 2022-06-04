@@ -155,3 +155,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://localhost:9000',
 ]
+
+AUTH_USER_MODEL = 'user.User'
