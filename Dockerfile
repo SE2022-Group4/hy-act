@@ -25,6 +25,6 @@ COPY . .
 # Set file permission of docker entrypoint script file
 RUN chmod +x docker-entrypoint.sh
 
-EXPOSE 8080
+EXPOSE 8000
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
