@@ -23,7 +23,8 @@ urlpatterns = [    # YOUR PATTERNS
     path('api/v1/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/v1/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
-    path('api/v1/admin/', admin.site.urls),
     path('api/v1/user/', include('user.urls')),
     path('api/v1/programs/', include('program.urls')),
+
+    path('admin/', admin.site.urls),
 ]

@@ -1,22 +1,45 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
+from user.models import Department, Major
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+User = get_user_model()
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['name']
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['name']
+
+
+class MajorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Major
+        fields = ['name']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    groups = GroupSerializer(many=True)
+    departments = DepartmentSerializer(many=True)
+    majors = MajorSerializer(many=True)
+
     class Meta:
         model = User
         fields = [
-            # 'url',
             'username',
             'email',
             'groups',
+            'telephone',
+            'departments',
+            'majors',
         ]
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
 
 
 class UserSigninSerializer(serializers.Serializer):
