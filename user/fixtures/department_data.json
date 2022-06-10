@@ -1,0 +1,37 @@
+[
+{
+    "model": "user.department",
+    "pk": 1,
+    "fields": {
+        "name": "IC-PBL교수학습센터"
+    }
+},
+{
+    "model": "user.department",
+    "pk": 3,
+    "fields": {
+        "name": "소프트웨어학부 행정팀"
+    }
+},
+{
+    "model": "user.department",
+    "pk": 4,
+    "fields": {
+        "name": "산학기획팀"
+    }
+},
+{
+    "model": "user.department",
+    "pk": 5,
+    "fields": {
+        "name": "연구정보팀"
+    }
+},
+{
+    "model": "user.department",
+    "pk": 6,
+    "fields": {
+        "name": "학술정보팀"
+    }
+}
+]

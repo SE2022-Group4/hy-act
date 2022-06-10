@@ -10,19 +10,19 @@ User = get_user_model()
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class MajorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Major
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,6 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'username',
+            'real_name',
             'email',
             'groups',
             'telephone',

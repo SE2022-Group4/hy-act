@@ -5,10 +5,12 @@ from rest_framework import viewsets, status, views
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import UserSerializer, GroupSerializer, UserSigninSerializer
+from .models import Major
+from .serializers import UserSerializer, GroupSerializer, UserSigninSerializer, MajorSerializer
 
 User = get_user_model()
 
@@ -61,3 +63,8 @@ class SessionUserInfoView(views.APIView):
         user_serialized = UserSerializer(user, context={'request': request})
 
         return Response(user_serialized.data, status=status.HTTP_200_OK)
+
+
+class MajorListView(ListAPIView):
+    queryset = Major.objects.all()
+    serializer_class = MajorSerializer

@@ -1,0 +1,23 @@
+[
+{
+    "model": "user.major",
+    "pk": 2,
+    "fields": {
+        "name": "소프트웨어학부"
+    }
+},
+{
+    "model": "user.major",
+    "pk": 3,
+    "fields": {
+        "name": "ICT융합학부"
+    }
+},
+{
+    "model": "user.major",
+    "pk": 4,
+    "fields": {
+        "name": "인공지능학과"
+    }
+}
+]

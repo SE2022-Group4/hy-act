@@ -17,6 +17,7 @@ class Major(models.Model):
 
 
 class User(AbstractUser):
+    real_name = models.CharField("User's real name", max_length=150)
     telephone = models.CharField("telephone number", max_length=150, blank=True)
     departments = models.ManyToManyField(Department, blank=True)
     majors = models.ManyToManyField(Major, blank=True)

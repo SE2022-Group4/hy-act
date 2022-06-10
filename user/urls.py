@@ -9,6 +9,7 @@ router.register(r'groups', views.GroupViewSet)
 urlpatterns = [
     path('signin/', views.signin),
     path('info/', views.SessionUserInfoView.as_view()),
+    path('major/', views.MajorListView.as_view()),
     # path('', include(router.urls)),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
