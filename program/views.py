@@ -2,11 +2,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework.filters import SearchFilter
 from django.http import Http404
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from program.models import Category, Program, Department
+from hy_act_server.fields import TimestampField
+from program.models import Category, Program, Department, AttendanceCode
 from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
 
 
@@ -78,20 +79,45 @@ class ProgramApplyView(APIView):
 
 
 # TODO: Implement Program Attendance Status View
-@NotImplementedError
 class ProgramAttendanceStatusView(APIView):
     def get(self, request, *args, **kwargs):
         pass
 
 
-@NotImplementedError
 class ProgramAttendanceCodeGenerateView(APIView):
-    def post(self, request, *args, **kwargs):
-        pass
+    class RequestDataSerializer(serializers.Serializer):
+        # FIXME: Improve comment on choice field
+        type = serializers.ChoiceField(help_text="0:프로그램 시작 코드 / 1:프로그램 종료 코드", choices=AttendanceCode.CodeType.choices)
+
+    class ResponseBodySerializer(serializers.Serializer):
+        created_at = TimestampField()
+        type = serializers.ChoiceField(help_text="0:프로그램 시작 코드 / 1:프로그램 종료 코드", choices=AttendanceCode.CodeType.choices)
+        code = serializers.CharField()
+
+    @extend_schema(
+        request=RequestDataSerializer,
+        responses={
+            status.HTTP_200_OK: ResponseBodySerializer,
+        }
+    )
+    def post(self, request, pk, *args, **kwargs):
+        if not Program.objects.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        program = Program.objects.get(id=pk)
+
+        serializer = self.RequestDataSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        code_type = serializer.validated_data.get('type')
+        attendance_code = program.create_attendance_code(code_type)
+
+        response_body = self.ResponseBodySerializer(attendance_code).data
+        return Response(response_body, status=status.HTTP_200_OK)
 
 
 # TODO: Implement Program Attendance Verify View
-@NotImplementedError
 class ProgramAttendanceCodeVerifyView(APIView):
     def post(self, request, *args, **kwargs):
         pass

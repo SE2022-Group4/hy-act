@@ -5,7 +5,7 @@ from hy_act_server.fields import TimestampField
 from program.models import Program, Category, Department
 
 
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = [
@@ -14,7 +14,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
+class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = [
@@ -23,7 +23,7 @@ class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class ProgramSerializer(serializers.HyperlinkedModelSerializer):
+class ProgramSerializer(serializers.ModelSerializer):
     created_at = TimestampField(help_text='프로그램 생성 시간', read_only=True)
     updated_at = TimestampField(help_text='프로그램 최종 수정 시간', read_only=True)
     apply_start_at = TimestampField(help_text='신청 접수 시작 시간')

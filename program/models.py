@@ -1,9 +1,19 @@
+import random
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
 from user.models import Department
 
 User = get_user_model()
+
+DEFAULT_ATTENDANCE_CODE_LENGTH = 6
+
+
+def generate_digit_code(length: int = DEFAULT_ATTENDANCE_CODE_LENGTH) -> str:
+    format_string = '{0:0' + str(length) + '}'
+
+    return format_string.format(random.randint(0, 10 ** length))
 
 
 class ProgramManager(models.Manager):
@@ -13,6 +23,9 @@ class ProgramManager(models.Manager):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Program(models.Model):
@@ -39,6 +52,9 @@ class Program(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def __str__(self):
+        return self.name
+
     def inactivate(self):
         self.active = False
 
@@ -48,6 +64,11 @@ class Program(models.Model):
     def recent_applicant_count(self):
         return len(Application.objects.filter(program=self).all())
 
+    def create_attendance_code(self, code_type):
+        attendance_code = AttendanceCode.objects.create(program=self, type=code_type)
+
+        return attendance_code
+
 
 class Application(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
@@ -56,7 +77,12 @@ class Application(models.Model):
 
 
 class AttendanceCode(models.Model):
+    class CodeType(models.IntegerChoices):
+        START_CODE = 0, 'start'
+        END_CODE = 1, 'end'
+
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    code = models.CharField(max_length=200)
-    created_at = models.DateTimeField()
-    expire_at = models.DateTimeField()
+    code = models.CharField(max_length=200, default=generate_digit_code)
+    type = models.SmallIntegerField(choices=CodeType.choices, default=CodeType.START_CODE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expire_at = models.DateTimeField(null=True)
