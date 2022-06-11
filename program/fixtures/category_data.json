@@ -1,0 +1,9 @@
+[
+{
+    "model": "program.category",
+    "pk": 1,
+    "fields": {
+        "name": "학술정보활용_연구"
+    }
+}
+]
