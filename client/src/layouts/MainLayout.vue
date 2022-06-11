@@ -1,0 +1,129 @@
+<template>bind
+  <q-layout view="lHr LpR lFr">
+    <q-drawer show-if-above bordered side="left">
+      <!-- 네비게이션 링크 -->
+      <q-list>
+        <q-item-label header>한양대학교 비교과 플랫폼</q-item-label>
+        <q-item>비교과 프로그램 신청</q-item>
+        <q-item>비교과 프로그램 출석 확인</q-item>
+        <q-item>수강 이력 및 인증서 발급</q-item>
+        <q-item>마일리지 확인 및 사용</q-item>
+      </q-list>
+
+      <div class="fixed-bottom">
+        <q-list>
+          <q-item-label header>지원</q-item-label>
+          <q-item>유지보수팀(031-400-1111)</q-item>
+          <q-item>학사팀(031-400-2222)</q-item>
+          <q-item>전산실(031-400-3333)</q-item>
+        </q-list>
+
+        <div id="language-dialog" style="background-color: #23272B">
+          <q-slide-transition>
+            <q-list
+              v-show="languageListOpened" style="margin-top: 20px">
+              <q-item-label header>언어</q-item-label>
+              <q-item>한국어</q-item>
+              <q-item>English</q-item>
+              <q-item>汉语</q-item>
+            </q-list>
+          </q-slide-transition>
+          <q-btn
+            flat
+            label="언어 설정"
+            :icon-right="languageListOpened ? 'mdi-menu-down' : 'mdi-menu-up'"
+            style="width: 100%; color: #91979b"
+            @click="openLanguageList" />
+        </div>
+      </div>
+    </q-drawer>
+
+    <q-drawer show-if-above bordered side="right" style="padding-top: 20px">
+      <q-list dense style="margin-bottom: 20%">
+        <q-item class="items-center">
+          <q-avatar size="56px" icon="mdi-account" style="background-color: #E2E6EA"/>
+        </q-item>
+        <q-item class="text-weight-bold items-center" style="color: #91979b" >하냥이 학생</q-item>
+        <q-item class="items-center">student@hanyang.ac.kr</q-item>
+      </q-list>
+
+      <q-list>
+        <q-item class="items-center">
+          <div class="col-8">예약한 프로그램</div>
+          <div class="col-4" style="text-align: end">2건</div>
+        </q-item>
+        <q-item class="items-center">
+          <div class="col-8">마일리지</div>
+          <div class="col-4" style="text-align: end">100포인트</div>
+        </q-item>
+        <q-item>
+          <div class="col-11" style="display: flex; align-items: center">예약 관리</div>
+          <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
+        </q-item>
+        <q-item>
+          <div class="col-11" style="display: flex; align-items: center">한양대학교 포털</div>
+          <q-icon class="col-1" size="20px" name="mdi-open-in-new"></q-icon>
+        </q-item>
+      </q-list>
+
+      <q-list style="background-color: #b0b6ba" separator>
+        <q-item-label header style="color: black; text-align: center">인기 비교과 프로그램</q-item-label>
+        <q-item style="color: black">하루 1시간 꿀잠 자기</q-item>
+        <q-item style="color: black">팀프로젝트에 유용한 GitHub 사용법</q-item>
+        <q-item style="color: black">학술정보관 출입 방법</q-item>
+        <q-item><q-btn flat label="더보기" style="color: black; width: 100%"/></q-item>
+      </q-list>
+
+      <div class="fixed-bottom items-center">
+        <q-btn
+          icon="mdi-cog"
+          label="설정"
+          flat
+          style="width: 100%; color: #91979b" />
+        <q-btn
+          icon="mdi-logout"
+          label="로그아웃"
+          flat
+          style="width: 100%; color: #91979b" />
+      </div>
+    </q-drawer>
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+</template>
+<style scoped>
+  .q-item__label--header {
+    color: #9994a3;
+  }
+  .q-item {
+    color: #91979b;
+    display: flex;
+    align-items: center;
+  }
+
+  #language-dialog {
+    border-top: solid #5B5D60;
+  }
+
+  div .items-center {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+<script lang="ts">
+import {defineComponent, ref} from 'vue';
+
+export default defineComponent({
+  name: 'MainLayout',
+  setup () {
+    const languageListOpened = ref(false)
+    return {
+      languageListOpened,
+      openLanguageList() {
+        languageListOpened.value = !languageListOpened.value
+      }
+    }
+  }
+});
+</script>
