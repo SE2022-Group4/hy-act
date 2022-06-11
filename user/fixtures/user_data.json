@@ -51,7 +51,7 @@
 },
 {
     "model": "user.user",
-    "pk": 5,
+    "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$320000$mYpEiF5fWs98p22A1lmGjk$FTRowRljlm4DYoUuf/jjyCGgPo5/g2/xdSdH52OpmnA=",
         "last_login": null,
