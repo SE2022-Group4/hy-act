@@ -65,9 +65,19 @@ class Program(models.Model):
         return len(Application.objects.filter(program=self).all())
 
     def create_attendance_code(self, code_type):
-        attendance_code = AttendanceCode.objects.create(program=self, type=code_type)
+        attendance_code, _ = AttendanceCode.objects.get_or_create(program=self, type=code_type)
 
         return attendance_code
+
+    def verify_attendance_code(self, code_type, code):
+        queryset = AttendanceCode.objects.filter(program=self, type=code_type).all()
+
+        if not queryset.exists():
+            return False
+
+        attendance_code = queryset.get()
+
+        return attendance_code.code == code
 
 
 class Application(models.Model):

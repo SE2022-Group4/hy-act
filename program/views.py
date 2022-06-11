@@ -117,7 +117,41 @@ class ProgramAttendanceCodeGenerateView(APIView):
         return Response(response_body, status=status.HTTP_200_OK)
 
 
-# TODO: Implement Program Attendance Verify View
 class ProgramAttendanceCodeVerifyView(APIView):
-    def post(self, request, *args, **kwargs):
-        pass
+    class RequestDataSerializer(serializers.Serializer):
+        # FIXME: Improve comment on choice field
+        type = serializers.ChoiceField(help_text="0:프로그램 시작 코드 / 1:프로그램 종료 코드", choices=AttendanceCode.CodeType.choices)
+        code = serializers.CharField()
+
+    @extend_schema(
+        request=RequestDataSerializer,
+        responses={
+            status.HTTP_200_OK: [],
+            status.HTTP_400_BAD_REQUEST: [{
+                "error_code": 10001,
+                "error_msg": "attendance code is incorrect"
+            }],
+        }
+    )
+    def post(self, request, pk, *args, **kwargs):
+        if not Program.objects.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        program = Program.objects.get(id=pk)
+
+        serializer = self.RequestDataSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        code_type = serializer.validated_data.get('type')
+        code = serializer.validated_data.get('code')
+
+        if not program.verify_attendance_code(code_type, code):
+            response_data = {
+                "error_code": 10001,
+                "error_msg": "attendance code is incorrect"
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_200_OK)
