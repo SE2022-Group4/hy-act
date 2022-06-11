@@ -14,6 +14,7 @@ python manage.py loaddata user/fixtures/department_data.json
 python manage.py loaddata user/fixtures/major_data.json
 python manage.py loaddata hy_act_server/fixtures/group_data.json
 python manage.py loaddata user/fixtures/user_data.json
+python manage.py loaddata program/fixtures/category_data.json
 python manage.py loaddata program/fixtures/program_data.json
 
 
