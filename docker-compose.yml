@@ -4,8 +4,6 @@ services:
       build: ./server
       ports:
         - 8000:8080
-      depends_on:
-        - hyuabot-redis
       volumes:
         - /etc/localtime:/etc/localtime:ro
   hy-act-client:
