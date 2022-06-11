@@ -1,3 +1,4 @@
+import datetime
 import random
 
 from django.contrib.auth import get_user_model
@@ -84,6 +85,19 @@ class Application(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    attendance_start_at = models.DateTimeField(null=True)
+    attendance_end_at = models.DateTimeField(null=True)
+
+    class Meta:
+        unique_together = ('program', 'student')
+
+    def start_attendance(self):
+        self.attendance_start_at = datetime.datetime.now()
+        self.save(update_fields=['attendance_start_at'])
+
+    def end_attendance(self):
+        self.attendance_end_at = datetime.datetime.now()
+        self.save(update_fields=['attendance_end_at'])
 
 
 class AttendanceCode(models.Model):

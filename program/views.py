@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from hy_act_server.fields import TimestampField
-from program.models import Category, Program, Department, AttendanceCode
+from program.models import Category, Program, Department, AttendanceCode, Application
 from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
 
 
@@ -73,6 +73,14 @@ class ProgramApplyView(APIView):
 
     def post(self, request, pk, format=None):
         program = self.get_object(pk)
+
+        if Application.objects.filter(program=program, student=request.user).exists():
+            response_data = {
+                "error_code": 10003,
+                "error_msg": "Application data for program already exists"
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
         program.apply(request.user)
 
         return Response(status=status.HTTP_200_OK)
@@ -139,6 +147,16 @@ class ProgramAttendanceCodeVerifyView(APIView):
 
         program = Program.objects.get(id=pk)
 
+        application = Application.objects.filter(program=program, student=request.user)
+        if not application.exists():
+            response_data = {
+                "error_code": 10001,
+                "error_msg": "User has no application information for the program"
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        application = application.first()
+
         serializer = self.RequestDataSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -149,9 +167,14 @@ class ProgramAttendanceCodeVerifyView(APIView):
 
         if not program.verify_attendance_code(code_type, code):
             response_data = {
-                "error_code": 10001,
+                "error_code": 10002,
                 "error_msg": "attendance code is incorrect"
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        if code_type == 0:
+            application.start_attendance()
+        elif code_type == 1:
+            application.end_attendance()
 
         return Response(status=status.HTTP_200_OK)
