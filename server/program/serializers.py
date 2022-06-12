@@ -30,7 +30,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     apply_end_at = TimestampField(help_text='신청 접수 종료 시간')
     program_start_at = TimestampField(help_text='프로그램 시작 시간')
     program_end_at = TimestampField(help_text='프로그램 종료 시간')
-    recent_applicant_count = IntegerField()
+    recent_applicant_count = IntegerField(read_only=True)
 
     class Meta:
         model = Program

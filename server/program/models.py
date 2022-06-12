@@ -1,3 +1,4 @@
+import datetime
 import random
 
 from django.contrib.auth import get_user_model
@@ -65,15 +66,38 @@ class Program(models.Model):
         return len(Application.objects.filter(program=self).all())
 
     def create_attendance_code(self, code_type):
-        attendance_code = AttendanceCode.objects.create(program=self, type=code_type)
+        attendance_code, _ = AttendanceCode.objects.get_or_create(program=self, type=code_type)
 
         return attendance_code
+
+    def verify_attendance_code(self, code_type, code):
+        queryset = AttendanceCode.objects.filter(program=self, type=code_type).all()
+
+        if not queryset.exists():
+            return False
+
+        attendance_code = queryset.get()
+
+        return attendance_code.code == code
 
 
 class Application(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    attendance_start_at = models.DateTimeField(null=True)
+    attendance_end_at = models.DateTimeField(null=True)
+
+    class Meta:
+        unique_together = ('program', 'student')
+
+    def start_attendance(self):
+        self.attendance_start_at = datetime.datetime.now()
+        self.save(update_fields=['attendance_start_at'])
+
+    def end_attendance(self):
+        self.attendance_end_at = datetime.datetime.now()
+        self.save(update_fields=['attendance_end_at'])
 
 
 class AttendanceCode(models.Model):
