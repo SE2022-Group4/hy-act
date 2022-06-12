@@ -4,10 +4,14 @@
       <!-- 네비게이션 링크 -->
       <q-list>
         <q-item-label header>한양대학교 비교과 플랫폼</q-item-label>
-        <q-item>비교과 프로그램 신청</q-item>
-        <q-item>비교과 프로그램 출석 확인</q-item>
-        <q-item>수강 이력 및 인증서 발급</q-item>
-        <q-item>마일리지 확인 및 사용</q-item>
+        <q-item v-if="group === '학생'">비교과 프로그램 신청</q-item>
+        <q-item v-if="group === '학생'">비교과 프로그램 출석 확인</q-item>
+        <q-item v-if="group === '학생'">수강 이력 및 인증서 발급</q-item>
+        <q-item v-if="group === '학생'">마일리지 확인 및 사용</q-item>
+        <q-item v-if="group === '학생'">비교과 프로그램 신청</q-item>
+        <q-item v-if="group === '상점 관리자'">마일리지 사용 처리</q-item>
+        <q-item v-if="group === '관리자'">비교과 프로그램 생성/수정</q-item>
+        <q-item v-if="group === '선생님'">비교과 프로그램 출석 관리</q-item>
       </q-list>
 
       <div class="fixed-bottom">
@@ -17,7 +21,6 @@
           <q-item>학사팀(031-400-2222)</q-item>
           <q-item>전산실(031-400-3333)</q-item>
         </q-list>
-
         <div id="language-dialog" style="background-color: #23272B">
           <q-slide-transition>
             <q-list
@@ -43,18 +46,19 @@
         <q-item class="items-center">
           <q-avatar size="56px" icon="mdi-account" style="background-color: #E2E6EA"/>
         </q-item>
-        <q-item class="text-weight-bold items-center" style="color: #91979b" >하냥이 학생</q-item>
-        <q-item class="items-center">student@hanyang.ac.kr</q-item>
+        <q-item class="text-weight-bold items-center" style="color: #91979b" >{{user.lastname}}{{user.firstname}} {{group}}</q-item>
+        <q-item class="items-center">{{user.email}}</q-item>
       </q-list>
 
-      <q-list>
+
+      <q-list v-if="group==='학생'">
         <q-item class="items-center">
           <div class="col-8">예약한 프로그램</div>
-          <div class="col-4" style="text-align: end">2건</div>
+          <div class="col-4" style="text-align: end">건</div>
         </q-item>
         <q-item class="items-center">
           <div class="col-8">마일리지</div>
-          <div class="col-4" style="text-align: end">100포인트</div>
+          <div class="col-4" style="text-align: end">0 포인트</div>
         </q-item>
         <q-item>
           <div class="col-11" style="display: flex; align-items: center">예약 관리</div>
@@ -66,7 +70,7 @@
         </q-item>
       </q-list>
 
-      <q-list style="background-color: #b0b6ba" separator>
+      <q-list style="background-color: #b0b6ba" separator v-if="group==='student'">
         <q-item-label header style="color: black; text-align: center">인기 비교과 프로그램</q-item-label>
         <q-item style="color: black">하루 1시간 꿀잠 자기</q-item>
         <q-item style="color: black">팀프로젝트에 유용한 GitHub 사용법</q-item>
@@ -84,7 +88,9 @@
           icon="mdi-logout"
           label="로그아웃"
           flat
-          style="width: 100%; color: #91979b" />
+          style="width: 100%; color: #91979b"
+          @click="logout" />
+        />
       </div>
     </q-drawer>
     <q-page-container>
@@ -113,12 +119,39 @@
 </style>
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
+import {useUserStore} from 'stores/user.store';
 
 export default defineComponent({
   name: 'MainLayout',
-  setup () {
+  setup: function () {
     const languageListOpened = ref(false)
+
+    const userStore = useUserStore()
+    userStore.fetchUser()
+    const group = ref('')
+    const user = ref(userStore.user)
+    userStore.$subscribe(() => {
+      user.value = userStore.user
+      if (user.value.groups.filter(group => group.name === 'student').length > 0) {
+        group.value = '학생'
+      } else if (user.value.groups.filter(group => group.name === 'lecturer').length > 0) {
+        group.value = '선생님'
+      } else if (user.value.groups.filter(group => group.name === 'admin').length > 0) {
+        group.value = '관리자'
+      } else {
+        group.value = '상점 관리자'
+      }
+    })
+
+
+    function logout() {
+      userStore.logout()
+    }
+
     return {
+      user,
+      group,
+      logout,
       languageListOpened,
       openLanguageList() {
         languageListOpened.value = !languageListOpened.value

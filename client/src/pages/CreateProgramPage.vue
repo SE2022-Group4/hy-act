@@ -6,30 +6,14 @@
       </div>
       <q-form @submit="onSubmit" @reset="onReset" class="col-12">
         <div class="row">
-          <q-uploader class="full-width" url="http://localhost:4444/upload" color="teal" filled accept=".jpg, image/*"/>
+          <q-uploader class="full-width" color="teal" filled accept=".jpg, image/*"/>
         </div>
         <div class="row" style="margin-top: 20px">
           <div class="text-h6 text-weight-bold col-4 q-mt-xs q-pr-xs q-mb-md" style="text-align: center">
             강의명
           </div>
           <div class="col-8">
-            <q-input outlined dense v-model="name"  />
-          </div>
-        </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 q-mt-xs q-pr-xs q-mb-md" style="text-align: center">
-            모집 대상
-          </div>
-          <div class="q-mb-xs col-8">
-            <q-select
-              dense
-              outlined
-              v-model="group"
-              :options="groups"
-              option-value="id"
-              option-label="name"
-              label="모집 대상"
-              multiple/>
+            <q-input outlined dense v-model="title"  />
           </div>
         </div>
         <div class="row">
@@ -40,14 +24,13 @@
             <q-select
               dense
               outlined
-              v-model="grade"
+              v-model="targetGrade"
               :options="grades"
               option-value="id"
               option-label="name"
               label="대상 학년"
               emit-value
-              map-options
-              multiple/>
+              map-option />
           </div>
         </div>
         <div class="row">
@@ -58,7 +41,7 @@
             <q-select
               dense
               outlined
-              v-model="gender"
+              v-model="targetGender"
               :options="genders"
               option-value="id"
               option-label="name"
@@ -69,22 +52,46 @@
           </div>
         </div>
         <div class="row">
-          <div class="text-h6 text-weight-bold col-4 q-mt-xs q-pr-xs q-mb-md" style="text-align: center">
-            대상 학과
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            진행 장소
           </div>
-          <div class="q-mb-xs col-8">
-            <q-select
+          <div class="col-8">
+            <q-input
               dense
               outlined
-              v-model="major"
-              :options="majors"
-              option-value="id"
-              option-label="name"
-              label="대상 학과"
-              emit-value
-              map-options
-              multiple
+              v-model="location"
+              label="진행 장소"
             />
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            신청 인원
+          </div>
+          <div class="col-8">
+            <q-input
+              dense
+              outlined
+              type="number"
+              v-model="maxApplicantCount"
+              label="신청 인원"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            진행 개요
+          </div>
+          <div class="col-8">
+            <q-input dense outlined label="진행 개요" v-model="description" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            프로그램 분야
+          </div>
+          <div class="col-8">
+            <q-select dense outlined label="분야" v-model="category" :options="categoryList.map(item => item.name)"/>
           </div>
         </div>
         <div class="row">
@@ -92,10 +99,10 @@
             시작 일시
           </div>
           <div class="col-4">
-            <q-input dense v-model="startDate" filled type="date" name="시작 날짜" />
+            <q-input dense v-model="programStartDate" filled type="date" name="시작 날짜" />
           </div>
           <div class="col-4" style="padding-inline-start: 5px">
-            <q-input dense v-model="startTime" filled type="time" name="시작 시간" />
+            <q-input dense v-model="programStartTime" filled type="time" name="시작 시간" />
           </div>
         </div>
         <div class="row">
@@ -103,10 +110,10 @@
             종료 일시
           </div>
           <div class="col-4">
-            <q-input dense v-model="endDate" filled type="date" name="종료 날짜" />
+            <q-input dense v-model="programEndDate" filled type="date" name="종료 날짜" />
           </div>
           <div class="col-4" style="padding-inline-start: 5px">
-            <q-input dense v-model="endTime" filled type="time" name="종료 시간" />
+            <q-input dense v-model="programEndTime" filled type="time" name="종료 시간" />
           </div>
         </div>
         <div class="row">
@@ -131,28 +138,6 @@
             <q-input dense v-model="applyEndTime" filled type="time" name="종료 시간" />
           </div>
         </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            진행 장소
-          </div>
-          <div class="col-8">
-            <q-input
-              dense
-              outlined
-              v-model="place"
-              label="진행 장소"
-            />
-          </div>
-        </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            진행 개요
-          </div>
-          <div class="col-8">
-            <q-input dense outlined label="진행 개요" v-model="description" />
-          </div>
-        </div>
-
         <q-separator color="black" />
 
         <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md" style="text-align: center; margin-top: 10px">
@@ -160,48 +145,12 @@
         </div>
         <div class="row">
           <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            이름
+            주관 기관
           </div>
           <div class="col-8">
-            <q-input dense outlined label="강사/주관 기관명" v-model="teacher" />
+            <q-select dense outlined label="기관" v-model="department" :options="departmentList.map(item => item.name)"/>
           </div>
         </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            이메일
-          </div>
-          <div class="col-8">
-            <q-input dense outlined label="강사/주관 기관 이메일" v-model="teacherEmail" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            전화번호
-          </div>
-          <div class="col-8">
-            <q-input dense outlined label="강사/주관 기관 전화번호" v-model="teacherPhone" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            신분
-          </div>
-          <div class="col-8">
-            <q-input dense outlined label="강사/주관 기관 신분" v-model="teacherGroup" />
-          </div>
-        </div>
-
-        <q-separator color="black" inset />
-
-        <div class="row margin-auto" style="margin-top: 10px">
-          <div class="text-h6 text-weight-bold col-4 q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
-            참여 포인트 :
-          </div>
-          <div class="col-8" style="max-height: 300px; text-align: left">
-            <q-input dense outlined v-model.number="mileage" type="number"/>
-          </div>
-        </div>
-
         <div class="row">
           <q-btn
             class="col-12"
@@ -218,270 +167,148 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar';
 import {ref} from 'vue';
-import {api} from "../boot/axios";
+import {api} from '../boot/axios';
+import {useUserStore} from '../stores/user.store';
+import {useQuasar} from 'quasar';
+import {useProgramCategoryStore} from '../stores/program.category.store';
+import {useProgramDepartmentStore} from '../stores/department.store';
 
 export default {
   name: 'CreateProgramPage',
   setup() {
-    const groups = ['무관', '재학생', '졸업생', '교직원'];
-    const grades = ['무관', '1학년', '2학년', '3학년', '4학년 이상'];
-    const genders = ['무관', '남성', '여성'];
-    const majors = [
-      { name: '기계공학과' },
-      { name: '로봇공학과' },
-      { name: '산업경영공학과' },
-      { name: '전자공학부' },
-      { name: '재료화학공학과' },
-      { name: '생명나노공학과' },
-      { name: '건축학부' },
-      { name: '건설환경플랜트공학과' },
-      { name: '교통물류공학과' },
-      { name: '국방정보공학과' },
-      { name: '융합공학과' },
-      { name: '스마트융합공학부' },
-      { name: '소프트웨어학부' },
-      { name: 'ICT융합학부' },
-      { name: '인공지능학과' },
-      { name: '약학과' },
-      { name: '응용수학과' },
-      { name: '응용물리학과' },
-      { name: '화학분자공학과' },
-      { name: '분자생명과학과' },
-      { name: '해양융합공학과' },
-      { name: '나노광전자학과' },
-      { name: '한국언어문학과' },
-      { name: '문화인류학과' },
-      { name: '문화콘텐츠학과' },
-      { name: '중국학과' },
-      { name: '일본학과' },
-      { name: '영미언어문화학과' },
-      { name: '프랑스학과' },
-      { name: '정보사회미디어학과' },
-      { name: '광고홍보학과' },
-      { name: '신문방송학과' },
-      { name: '정보사회학과' },
-      { name: '경제학부' },
-      { name: '경영학부' },
-      { name: '보험계리학과' },
-      { name: '회계세무학과' },
-      { name: '주얼리·패션디자인학과' },
-      { name: '산업디자인학과' },
-      { name: '커뮤니케이션디자인학과' },
-      { name: '영상디자인학과' },
-      { name: '스포츠과학부' },
-      { name: '무용예술학과' },
-      { name: '실용음악학과' },
-    ]
+    const $q = useQuasar()
+    const userStore = useUserStore();
+    userStore.$subscribe(() => {
+      console.log(userStore.user);
+      if(userStore.user.groups.filter(group => group.name === 'admin').length === 0) {
+        $q.dialog({
+          title: '오류',
+          message: '관리자 권한이 필요합니다.',
+          ok: true,
+        }).onOk(() => {
+          window.location.href = '/';
+        });
+      }
+    });
 
-    const $q = useQuasar();
-    const name = ref('');
-    const group = ref([]);
-    const grade = ref([]);
-    const gender = ref('무관');
-    const major = ref([]);
+    const now = new Date();
+    const zero = num => num < 10 && num >= 0 ? '0' + num : num;
 
-    const startDate = ref(null);
-    const startTime = ref(null);
-    const endDate = ref(null);
-    const endTime = ref(null);
-
-    const applyStartDate = ref(null);
-    const applyStartTime = ref(null);
-    const applyEndDate = ref(null);
-    const applyEndTime = ref(null);
-
-    const place = ref('');
+    const title = ref('');
     const description = ref('');
+    const location = ref('');
+    const applyStartDate = ref(`${now.getFullYear()}-${zero(now.getMonth() + 1)}-${zero(now.getDate())}`);
+    const applyStartTime = ref(`${zero(now.getHours())}:${zero(now.getMinutes())}`);
+    const applyEndDate = ref(`${now.getFullYear()}-${zero(now.getMonth() + 1)}-${zero(now.getDate() + 3)}`);
+    const applyEndTime = ref('23:59');
+    const programStartDate = ref(`${now.getFullYear()}-${zero(now.getMonth() + 2)}-${zero(now.getDate())}`);
+    const programStartTime = ref('09:00');
+    const programEndDate = ref(`${now.getFullYear()}-${zero(now.getMonth() + 2)}-${zero(now.getDate())}`);
+    const programEndTime = ref('13:00');
+    const thumbnailURL = ref('');
+    const targetGrade = ref('전체');
+    const targetGender = ref('전체');
+    const category = ref('');
+    const department = ref('');
+    const maxApplicantCount = ref(0);
 
-    const teacher = ref('');
-    const teacherEmail = ref('');
-    const teacherPhone = ref('');
-    const teacherGroup = ref('');
+    const thumbnailURLList = [
+      'http://jjal.today/data/file/gallery/1028612757_dJDo9pBV_2bd774f01a7f254ec0c907978f95f52ea1f05ce4.jpg',
+      'https://image.newsis.com/2021/07/26/NISI20210726_0000795204_web.jpg?rnd=20210726113530',
+      'https://img.etnews.com/news/article/2019/05/31/cms_temp_article_31142124414587.jpg'
+    ];
+    thumbnailURL.value = thumbnailURLList[Math.floor(Math.random() * thumbnailURLList.length)]
 
-    const mileage = ref(-1);
+    const categoryStore = useProgramCategoryStore();
+    categoryStore.fetchProgramCategoryList();
+    const categoryList = ref([]);
+    categoryStore.$subscribe(() => {
+      categoryList.value = categoryStore.categoryList;
+    });
+
+    const departmentStore = useProgramDepartmentStore();
+    departmentStore.fetchDepartmentList();
+    const departmentList = ref([]);
+    departmentStore.$subscribe(() => {
+      departmentList.value = departmentStore.departmentList;
+    });
+    const genders = ['전체', '남성', '여성']
 
     return {
-      name, group, grade, gender, major, startDate, startTime, endDate, endTime,
-      applyStartDate, applyStartTime, applyEndDate, applyEndTime,
-      place, description, teacher, teacherEmail, teacherPhone, teacherGroup, mileage,
-      groups, genders, grades, majors,
+      title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
+      programStartDate, programStartTime, programEndDate, programEndTime, thumbnailURL, targetGrade, targetGender,
+      category, department, maxApplicantCount, categoryList, departmentList,
+      grades: ['전체', '1학년', '2학년', '3학년', '4학년 이상'],
+      genders,
       onSubmit() {
-        if(name.value.length === 0){
+        if(title.value.trim().length === 0){
           $q.notify({
             color: 'red-5',
             textColor: 'white',
             icon: 'warning',
-            message: '강의 이름이 비어있습니다.',
-          });
-        }
-
-        if(group.value.length === 0){
+            message: '제목을 입력해주세요.',
+          })
+        } else if (description.value.trim().length === 0){
           $q.notify({
             color: 'red-5',
             textColor: 'white',
             icon: 'warning',
-            message: '모집 대상이 비어있습니다.',
-          });
-        }
-
-        if (grade.value.length === 0) {
+            message: '설명을 입력해주세요.',
+          })
+        } else if (location.value.trim().length === 0){
           $q.notify({
             color: 'red-5',
             textColor: 'white',
             icon: 'warning',
-            message: '모집 학년이 비어있습니다.',
-          });
-        }
-
-        if (major.value.length === 0) {
+            message: '장소를 입력해주세요.',
+          })
+        } else if (category.value.trim().length === 0){
           $q.notify({
             color: 'red-5',
             textColor: 'white',
             icon: 'warning',
-            message: '모집 전공이 비어있습니다.',
-          });
-        }
-
-        if(startDate.value === null || startTime.value === null){
+            message: '카테고리를 입력해주세요.',
+          })
+        } else if (department.value.trim().length === 0){
           $q.notify({
             color: 'red-5',
             textColor: 'white',
             icon: 'warning',
-            message: '시작 일시가 비어있습니다.',
-          });
+            message: '주관기관을 입력해주세요.',
+          })
         }
-
-        if(endDate.value === null || endTime.value === null){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '종료 일시가 비어있습니다.',
-          });
+        else {
+          const data = {
+            name: title.value,
+            description: description.value,
+            location: location.value,
+            apply_start_at: new Date(`${applyStartDate.value} ${applyStartTime.value}`).getTime() / 1000,
+            apply_end_at: new Date(`${applyEndDate.value} ${applyEndTime.value}`).getTime() / 1000,
+            program_start_at: new Date(`${programStartDate.value} ${programStartTime.value}`).getTime() / 1000,
+            program_end_at: new Date(`${programEndDate.value} ${programEndTime.value}`).getTime() / 1000,
+            thumbnail_url: thumbnailURL.value,
+            target_grade: parseInt(targetGrade.value.replace('학년', '').replace('전체', '0')),
+            max_applicant_count: maxApplicantCount.value,
+            sex: genders.indexOf(targetGender.value),
+            department: departmentList.value.filter(item => item.name === department.value)[0].id,
+            category: categoryList.value.filter(item => item.name === category.value)[0].id,
+          };
+          console.log(JSON.stringify(data));
+          api.post('/programs/', JSON.stringify(data), {headers: {'Authorization': `Token ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'}}).then(
+            () => {
+              $q.notify({
+                color: 'green-5',
+                textColor: 'white',
+                icon: 'check',
+                message: '새로운 프로그램을 생성했습니다.',
+              })
+            }
+          )
         }
-
-        if(`${startDate.value} ${startTime.value}` > `${endDate.value} ${endTime.value}`){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '시작 일시가 종료 일시보다 빠릅니다.',
-          });
-        }
-
-        if(applyStartDate.value === null || applyStartTime.value === null){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '신청 시작 일시가 비어있습니다.',
-          });
-        }
-
-
-        if(applyEndDate.value === null || applyEndTime.value === null){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '신청 종료 일시가 비어있습니다.',
-          });
-        }
-
-        if(`${applyStartDate.value} ${applyStartTime.value}` > `${applyEndDate.value} ${applyEndTime.value}`){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '신청 시작 일시가 종료 일시보다 빠릅니다.',
-          });
-        }
-
-        if(place.value.length === 0){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '진행 장소가 비어있습니다.',
-          });
-        }
-
-        if(teacher.value.length === 0){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '강사 이름이 비어있습니다.',
-          });
-        }
-
-        if(teacherEmail.value.length === 0){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '강사 이메일이 비어있습니다.',
-          });
-        }
-
-        if(teacherPhone.value.length === 0){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '강사 연락처가 비어있습니다.',
-          });
-        }
-
-        if(mileage.value < 0){
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: '마일리지가 비어있습니다.',
-          });
-        }
-
-        const data = {
-          name: name.value,
-          group: group.value,
-          grade: grade.value,
-          gender: gender.value,
-          major: major.value,
-          startDate: startDate.value,
-          startTime: startTime.value,
-          endDate: endDate.value,
-          endTime: endTime.value,
-          applyStartDate: applyStartDate.value,
-          applyStartTime: applyStartTime.value,
-          applyEndDate: applyEndDate.value,
-          applyEndTime: applyEndTime.value,
-          place: place.value,
-          description: description.value,
-          teacherName: teacher.value,
-          teacherEmail: teacherEmail.value,
-          teacherPhone: teacherPhone.value,
-          teacherGroup: teacherGroup.value,
-          mileage: mileage.value
-        };
-
-        api.post("/program", JSON.stringify(data)).then(
-          () => {
-            $q.notify({
-              color: 'green-5',
-              textColor: 'white',
-              message: '정상적으로 저장되었습니다.',
-            });
-          }
-        )
       },
-
       onReset() {
-        name.value = null;
-        age.value = null;
-        accept.value = false;
+        title.value = null;
       },
     };
   },
