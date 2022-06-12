@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django_filters.rest_framework import DjangoFilterBackend
@@ -210,3 +212,12 @@ class LecturerListView(ListAPIView):
     )
     def list(self, request, *args, **kwargs):
         return super(LecturerListView, self).list(request, *args, **kwargs)
+
+
+class MyProgramListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(application__student=user, program_end_at__gt=datetime.datetime.now())
