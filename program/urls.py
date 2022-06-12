@@ -8,6 +8,7 @@ router.register('', views.ProgramViewSet)
 urlpatterns = [
     path('category/', views.CategoryView.as_view()),
     path('department/', views.DepartmentView.as_view()),
+    path('lecturer/', views.LecturerListView.as_view()),
 
     # This routing rules should be placed at the end
     path('', include(router.urls)),

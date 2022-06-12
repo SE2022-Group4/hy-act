@@ -1,14 +1,20 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.filters import SearchFilter
 from django.http import Http404
-from rest_framework import viewsets, permissions, status, serializers
+from rest_framework import viewsets, permissions, status, serializers, filters
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from hy_act_server.fields import TimestampField
 from program.models import Category, Program, Department, AttendanceCode, Application
 from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
+from user.serializers import UserSerializer
+
+User = get_user_model()
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
@@ -178,3 +184,29 @@ class ProgramAttendanceCodeVerifyView(APIView):
             application.end_attendance()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class LecturerListView(ListAPIView):
+    class RequestDataSerializer(serializers.Serializer):
+        name = serializers.CharField(help_text='사용자 실명 검색 필드. 2 글자 이상 입력시 결과 리턴')
+
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        username = self.request.query_params.get('name')
+
+        if username is not None and len(username) > 1:
+            queryset = Group.objects.get(name='lecturer').user_set.filter(real_name__startswith=username)
+        else:
+            queryset = Group.objects.none()
+
+        return queryset
+
+    @extend_schema(
+        description='name query parameter로 사용자 실명 검색. 2 글자 이상 입력시 결과 리턴',
+        responses={
+            status.HTTP_200_OK: UserSerializer(many=True),
+        }
+    )
+    def list(self, request, *args, **kwargs):
+        return super(LecturerListView, self).list(request, *args, **kwargs)
