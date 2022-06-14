@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 
 from hy_act_server.fields import TimestampField
 from program.models import Category, Program, Department, AttendanceCode, Application
-from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
+from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer, ProgramDetailSerializer
 from user.serializers import UserSerializer
 
 User = get_user_model()
@@ -94,10 +94,20 @@ class ProgramApplyView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# TODO: Implement Program Attendance Status View
 class ProgramAttendanceStatusView(APIView):
-    def get(self, request, *args, **kwargs):
-        pass
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: ProgramDetailSerializer,
+        }
+    )
+    def get(self, request, pk, *args, **kwargs):
+        program = Program.objects.prefetch_related("application_set").filter(pk=pk).first()
+        if program is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        response_data = ProgramDetailSerializer(program).data
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class ProgramAttendanceCodeGenerateView(APIView):

@@ -80,6 +80,19 @@ class Program(models.Model):
 
         return attendance_code.code == code
 
+    def applications(self):
+        return self.application_set.all()
+
+    def start_attendance_code(self):
+        attendance_code = self.attendancecode_set.filter(type=AttendanceCode.CodeType.START_CODE).first()
+
+        return attendance_code.code if attendance_code is not None else None
+
+    def end_attendance_code(self):
+        attendance_code = self.attendancecode_set.filter(type=AttendanceCode.CodeType.END_CODE).first()
+
+        return attendance_code.code if attendance_code is not None else None
+
 
 class Application(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
