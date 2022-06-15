@@ -9,7 +9,10 @@ urlpatterns = [
     path('category/', views.CategoryView.as_view()),
     path('department/', views.DepartmentView.as_view()),
     path('lecturer/', views.LecturerListView.as_view()),
-    path('my/', views.MyProgramListView.as_view()),
+    path('my/', views.MyProgramApplicationListView.as_view()),  # DEPRECATED. Replaced to /api/v1/programs/my/applications/
+    path('my/applications/', views.MyProgramApplicationListView.as_view()),
+    path('my/managing-programs/', views.MyProgramManagingListView.as_view()),
+    path('my/instructing-programs/', views.MyProgramInstructingListView.as_view()),
 
     # This routing rules should be placed at the end
     path('', include(router.urls)),

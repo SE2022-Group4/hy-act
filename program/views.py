@@ -249,10 +249,28 @@ class LecturerListView(ListAPIView):
         return super(LecturerListView, self).list(request, *args, **kwargs)
 
 
-class MyProgramListView(ListAPIView):
+class MyProgramApplicationListView(ListAPIView):
     serializer_class = ProgramSerializer
 
     def get_queryset(self):
         user = self.request.user
 
         return Program.objects.filter(application__student=user, program_end_at__gt=datetime.datetime.now())
+
+
+class MyProgramManagingListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(manager=user)
+
+
+class MyProgramInstructingListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(lecturer=user)
