@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.fields import IntegerField, CharField
+from rest_framework.fields import IntegerField, CharField, HiddenField
 
 from hy_act_server.fields import TimestampField
 from program.models import Program, Category, Department, Application
@@ -39,6 +39,20 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
 
 class ProgramSerializer(serializers.ModelSerializer):
+    class CurrentUserDefault:
+        """
+        May be applied as a `default=...` value on a serializer field.
+        Returns the current user.
+        """
+        requires_context = True
+
+        def __call__(self, serializer_field):
+            return serializer_field.context['request'].user.id
+
+    manager = UserSerializer(help_text='프로그램 관리자', read_only=True)
+    manager_id = HiddenField(default=CurrentUserDefault())
+    lecturer = UserSerializer(help_text='프로그램 진행자', read_only=True)
+    lecturer_id = IntegerField(help_text='프로그램 진행자 ID', write_only=True)
     created_at = TimestampField(help_text='프로그램 생성 시간', read_only=True)
     updated_at = TimestampField(help_text='프로그램 최종 수정 시간', read_only=True)
     apply_start_at = TimestampField(help_text='신청 접수 시작 시간')
@@ -51,6 +65,10 @@ class ProgramSerializer(serializers.ModelSerializer):
         model = Program
         fields = [
             'id',
+            'manager',
+            'manager_id',
+            'lecturer',
+            'lecturer_id',
             'name',
             'description',
             'created_at',

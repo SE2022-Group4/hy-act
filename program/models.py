@@ -30,7 +30,8 @@ class Category(models.Model):
 
 
 class Program(models.Model):
-    manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    manager = models.ForeignKey(User, on_delete=models.CASCADE, related_name='managing_program_set')
+    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='instructing_program_set')
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
