@@ -94,6 +94,31 @@ class ProgramApplyView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class ProgramApplicationCancelView(APIView):
+    def get_object(self, pk):
+        try:
+            return Program.objects.get(pk=pk)
+        except Program.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk):
+        program = self.get_object(pk)
+
+        application = program.application_set.filter(student=request.user).first()
+
+        if application is None:
+            response_data = {
+                "error_code": 10004,
+                "error_msg": "Application data for program not exists"
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        # TODO: Improve to log delete operations
+        application.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+
 class ProgramAttendanceStatusView(APIView):
     @extend_schema(
         responses={

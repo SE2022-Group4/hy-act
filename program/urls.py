@@ -14,6 +14,7 @@ urlpatterns = [
     # This routing rules should be placed at the end
     path('', include(router.urls)),
     path('<int:pk>/apply/', views.ProgramApplyView.as_view()),
+    path('<int:pk>/cancel/', views.ProgramApplicationCancelView.as_view()),
     path('<int:pk>/attendance/', views.ProgramAttendanceStatusView.as_view()),
     path('<int:pk>/attendance/code/create/', views.ProgramAttendanceCodeGenerateView.as_view()),
     path('<int:pk>/attendance/code/verify/', views.ProgramAttendanceCodeVerifyView.as_view()),
