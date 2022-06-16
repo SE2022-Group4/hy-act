@@ -9,7 +9,7 @@ services:
   hy-act-client:
       build: ./client
       ports:
-        - 9000:80
+        - 9000:9000
       depends_on:
         - hy-act-server
       volumes:
