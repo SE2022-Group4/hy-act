@@ -106,15 +106,15 @@ export default defineComponent({
         return
       }
 
-      // const now = new Date();
-      // if(now.getTime() < program.apply_start_at || now.getTime() > program.apply_end_at) {
-      //   $q.dialog({
-      //     title: '신청 제한',
-      //     message: '신청 기간이 아닙니다.',
-      //     color: 'negative'
-      //   })
-      //   return
-      // }
+      const now = new Date();
+      if(now.getTime() < program.apply_start_at || now.getTime() > program.apply_end_at) {
+        $q.dialog({
+          title: '신청 제한',
+          message: '신청 기간이 아닙니다.',
+          color: 'negative'
+        })
+        return
+      }
 
       dialogOpened.value = true;
       programItem.value = program;
