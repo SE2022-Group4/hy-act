@@ -1,14 +1,22 @@
+import datetime
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.filters import SearchFilter
 from django.http import Http404
-from rest_framework import viewsets, permissions, status, serializers
+from rest_framework import viewsets, permissions, status, serializers, filters
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from hy_act_server.fields import TimestampField
 from program.models import Category, Program, Department, AttendanceCode, Application
-from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer
+from program.serializers import CategorySerializer, ProgramSerializer, DepartmentSerializer, ProgramDetailSerializer
+from user.serializers import UserSerializer
+
+User = get_user_model()
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
@@ -86,10 +94,45 @@ class ProgramApplyView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# TODO: Implement Program Attendance Status View
+class ProgramApplicationCancelView(APIView):
+    def get_object(self, pk):
+        try:
+            return Program.objects.get(pk=pk)
+        except Program.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk):
+        program = self.get_object(pk)
+
+        application = program.application_set.filter(student=request.user).first()
+
+        if application is None:
+            response_data = {
+                "error_code": 10004,
+                "error_msg": "Application data for program not exists"
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        # TODO: Improve to log delete operations
+        application.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+
 class ProgramAttendanceStatusView(APIView):
-    def get(self, request, *args, **kwargs):
-        pass
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: ProgramDetailSerializer,
+        }
+    )
+    def get(self, request, pk, *args, **kwargs):
+        program = Program.objects.prefetch_related("application_set").filter(pk=pk).first()
+        if program is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        response_data = ProgramDetailSerializer(program).data
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class ProgramAttendanceCodeGenerateView(APIView):
@@ -178,3 +221,56 @@ class ProgramAttendanceCodeVerifyView(APIView):
             application.end_attendance()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class LecturerListView(ListAPIView):
+    class RequestDataSerializer(serializers.Serializer):
+        name = serializers.CharField(help_text='사용자 실명 검색 필드. 2 글자 이상 입력시 결과 리턴')
+
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        username = self.request.query_params.get('name')
+
+        if username is not None and len(username) > 1:
+            queryset = Group.objects.get(name='lecturer').user_set.filter(real_name__startswith=username)
+        else:
+            queryset = Group.objects.none()
+
+        return queryset
+
+    @extend_schema(
+        description='name query parameter로 사용자 실명 검색. 2 글자 이상 입력시 결과 리턴',
+        responses={
+            status.HTTP_200_OK: UserSerializer(many=True),
+        }
+    )
+    def list(self, request, *args, **kwargs):
+        return super(LecturerListView, self).list(request, *args, **kwargs)
+
+
+class MyProgramApplicationListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(application__student=user, program_end_at__gt=datetime.datetime.now())
+
+
+class MyProgramManagingListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(manager=user)
+
+
+class MyProgramInstructingListView(ListAPIView):
+    serializer_class = ProgramSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Program.objects.filter(lecturer=user)

@@ -4,6 +4,7 @@
     "pk": 1,
     "fields": {
         "manager": 1,
+        "lecturer": 1,
         "name": "[IT 워크숍]파이썬 통계처리 특강",
         "description": "대학원생 학습 및 연구 역량 강화 위한 파이썬 프로그램 코딩기초 특강 2월에 진행된 실시간 강의 녹화본 제공(수강생 요청)",
         "created_at": "2022-06-10T14:59:17.107Z",
@@ -27,6 +28,7 @@
     "pk": 2,
     "fields": {
         "manager": 1,
+        "lecturer": 3,
         "name": "여행, 떠날 준비됐나요? - 인문 여행편",
         "description": "‘한양뮤지엄아카데미’ 는 한양대학교박물관에서 문화적 플랫폼으로서의 역할을 강화하기 위하여 2017년부터 기획된 문화강좌입니다. 2022년 1학기에는 ZOOM을 이용한 실시간 화상 강연과 오프라인 강연이 동시에 진행됩니다.",
         "created_at": "2022-06-10T15:16:24.912Z",
@@ -50,6 +52,7 @@
     "pk": 3,
     "fields": {
         "manager": 1,
+        "lecturer": 3,
         "name": "SPSS 기초(통계분석)",
         "description": "기술통계, 빈도분석, T검정, 교차분석 등 통계기초 이론 및 실습교육",
         "created_at": "2022-06-10T15:18:53.071Z",
@@ -65,6 +68,126 @@
         "department": 6,
         "sex": 1,
         "max_applicant_count": 0,
+        "active": true
+    }
+},
+{
+    "model": "program.program",
+    "pk": 4,
+    "fields": {
+        "manager": 1,
+        "lecturer": 1,
+        "name": "IC-PBL+ Graduate Championship(챔피언십)",
+        "description": "대학원생을 대상으로 IC-PBL+수업에서 도출된 우수한 솔루션과 프로젝트 성과를 공모하고, 접수된 결과물 중 우수작을 선정하여 시상함",
+        "created_at": "2022-06-12T05:37:20.089Z",
+        "updated_at": "2022-06-12T05:37:20.089Z",
+        "apply_start_at": "2022-06-12T05:36:21Z",
+        "apply_end_at": "2022-06-12T05:36:21Z",
+        "program_start_at": "2022-06-12T05:36:21Z",
+        "program_end_at": "2022-06-12T05:36:21Z",
+        "thumbnail_url": "http://newsimg.hankookilbo.com/2019/07/21/201907211748767877_5.jpg",
+        "location": "온라인",
+        "target_grade": "4학년",
+        "category": 1,
+        "department": 1,
+        "sex": 0,
+        "max_applicant_count": 100,
+        "active": true
+    }
+},
+{
+    "model": "program.program",
+    "pk": 5,
+    "fields": {
+        "manager": 1,
+        "lecturer": 1,
+        "name": "IC-PBL+ Graduate Championship(챔피언십)",
+        "description": "대학원생을 대상으로 IC-PBL+수업에서 도출된 우수한 솔루션과 프로젝트 성과를 공모하고, 접수된 결과물 중 우수작을 선정하여 시상함",
+        "created_at": "2022-06-12T06:04:34.208Z",
+        "updated_at": "2022-06-12T06:04:34.208Z",
+        "apply_start_at": "2022-06-12T05:36:21Z",
+        "apply_end_at": "2022-06-12T05:36:21Z",
+        "program_start_at": "2022-06-12T05:36:21Z",
+        "program_end_at": "2022-06-12T05:36:21Z",
+        "thumbnail_url": "http://newsimg.hankookilbo.com/2019/07/21/201907211748767877_5.jpg",
+        "location": "온라인",
+        "target_grade": "4학년",
+        "category": 1,
+        "department": 1,
+        "sex": 0,
+        "max_applicant_count": 100,
+        "active": true
+    }
+},
+{
+    "model": "program.program",
+    "pk": 6,
+    "fields": {
+        "manager": 1,
+        "lecturer": 3,
+        "name": "대학원생역량강화 프로그램 '지구와의 공존을 모색하는 가장 쉬운 기후수업'",
+        "description": "환경을 위한 노력은 선택이 아닌 의무가 된 현실 속에서 기후변화의 역사를 통해 과학적 원리와 기후변화의 진짜 의미를 알고 우리 스스로 기후위기의 심각성을 깨달을 수 있는 과정이다.",
+        "created_at": "2022-06-15T06:08:57.060Z",
+        "updated_at": "2022-06-15T06:08:57.060Z",
+        "apply_start_at": "2022-06-15T06:05:39Z",
+        "apply_end_at": "2022-06-15T06:05:39Z",
+        "program_start_at": "2022-06-15T06:38:59Z",
+        "program_end_at": "2022-06-15T06:38:59Z",
+        "thumbnail_url": "https://hylu-s.hanyang.ac.kr/attachment/view/7787/cover.jpg",
+        "location": "온라인강의실",
+        "target_grade": "4",
+        "category": 1,
+        "department": 4,
+        "sex": 0,
+        "max_applicant_count": 40,
+        "active": true
+    }
+},
+{
+    "model": "program.program",
+    "pk": 7,
+    "fields": {
+        "manager": 1,
+        "lecturer": 3,
+        "name": "대학원생역량강화 프로그램 '지구와의 공존을 모색하는 가장 쉬운 기후수업'",
+        "description": "환경을 위한 노력은 선택이 아닌 의무가 된 현실 속에서 기후변화의 역사를 통해 과학적 원리와 기후변화의 진짜 의미를 알고 우리 스스로 기후위기의 심각성을 깨달을 수 있는 과정이다.",
+        "created_at": "2022-06-15T06:17:11.681Z",
+        "updated_at": "2022-06-15T06:17:11.681Z",
+        "apply_start_at": "2022-06-15T06:05:39Z",
+        "apply_end_at": "2022-06-15T06:05:39Z",
+        "program_start_at": "2022-06-15T06:38:59Z",
+        "program_end_at": "2022-06-15T06:38:59Z",
+        "thumbnail_url": "https://hylu-s.hanyang.ac.kr/attachment/view/7787/cover.jpg",
+        "location": "온라인강의실",
+        "target_grade": "4",
+        "category": 1,
+        "department": 4,
+        "sex": 0,
+        "max_applicant_count": 40,
+        "active": true
+    }
+},
+{
+    "model": "program.program",
+    "pk": 8,
+    "fields": {
+        "manager": 1,
+        "lecturer": 3,
+        "name": "대학원생역량강화 프로그램 '지구와의 공존을 모색하는 가장 쉬운 기후수업'",
+        "description": "환경을 위한 노력은 선택이 아닌 의무가 된 현실 속에서 기후변화의 역사를 통해 과학적 원리와 기후변화의 진짜 의미를 알고 우리 스스로 기후위기의 심각성을 깨달을 수 있는 과정이다.",
+        "created_at": "2022-06-15T06:21:10.974Z",
+        "updated_at": "2022-06-15T06:21:10.974Z",
+        "apply_start_at": "2022-06-15T06:05:39Z",
+        "apply_end_at": "2022-06-15T06:05:39Z",
+        "program_start_at": "2022-06-15T06:38:59Z",
+        "program_end_at": "2022-06-15T06:38:59Z",
+        "thumbnail_url": "https://hylu-s.hanyang.ac.kr/attachment/view/7787/cover.jpg",
+        "location": "온라인강의실",
+        "target_grade": "4",
+        "category": 1,
+        "department": 4,
+        "sex": 0,
+        "max_applicant_count": 40,
         "active": true
     }
 }

@@ -30,7 +30,8 @@ class Category(models.Model):
 
 
 class Program(models.Model):
-    manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    manager = models.ForeignKey(User, on_delete=models.CASCADE, related_name='managing_program_set')
+    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='instructing_program_set')
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -79,6 +80,19 @@ class Program(models.Model):
         attendance_code = queryset.get()
 
         return attendance_code.code == code
+
+    def applications(self):
+        return self.application_set.all()
+
+    def start_attendance_code(self):
+        attendance_code = self.attendancecode_set.filter(type=AttendanceCode.CodeType.START_CODE).first()
+
+        return attendance_code.code if attendance_code is not None else None
+
+    def end_attendance_code(self):
+        attendance_code = self.attendancecode_set.filter(type=AttendanceCode.CodeType.END_CODE).first()
+
+        return attendance_code.code if attendance_code is not None else None
 
 
 class Application(models.Model):
