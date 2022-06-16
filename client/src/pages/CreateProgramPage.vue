@@ -152,7 +152,26 @@
           </div>
         </div>
         <div class="row">
+          <div class="text-h6 text-weight-bold col-4 vertical-middle q-pr-xs q-mb-md q-mt-sm" style="text-align: center">
+            강사 검색
+          </div>
+          <div class="col-8">
+            <q-select
+              ref="lecturerSearchBar"
+              filled
+              v-model="lecturer"
+              use-input
+              hide-selected
+              fill-input
+              :options="lectureList.map(item => item.real_name)"
+              @filter="filter"
+              hide-dropdown-icon
+              />
+          </div>
+        </div>
+        <div class="row">
           <q-btn
+            style="margin-top: 250px"
             class="col-12"
             padding="xs 100px"
             size="25px"
@@ -173,6 +192,7 @@ import {useUserStore} from '../stores/user.store';
 import {useQuasar} from 'quasar';
 import {useProgramCategoryStore} from '../stores/program.category.store';
 import {useProgramDepartmentStore} from '../stores/department.store';
+import {useLecturerStore} from '../stores/lecturer.store';
 
 export default {
   name: 'CreateProgramPage',
@@ -235,10 +255,30 @@ export default {
     });
     const genders = ['전체', '남성', '여성']
 
+    const lecturer = ref('');
+    const lecturerSearchBar = ref(null)
+
+    const lecturerStore = useLecturerStore()
+    const lectureList = ref(lecturerStore.lecturerList)
+    lecturerStore.$subscribe(() => {
+      lectureList.value = lecturerStore.lecturerList;
+    })
+
+    function filter(value, update) {
+      if (value.length < 2) {
+        lectureList.value = []
+      }
+      else {
+        lecturerStore.fetchLectureList(value)
+        update()
+      }
+    }
+
     return {
       title, description, location, applyStartDate, applyStartTime, applyEndDate, applyEndTime,
       programStartDate, programStartTime, programEndDate, programEndTime, thumbnailURL, targetGrade, targetGender,
-      category, department, maxApplicantCount, categoryList, departmentList,
+      category, department, maxApplicantCount, categoryList, departmentList, lecturer, lectureList, lecturerSearchBar,
+      filter,
       grades: ['전체', '1학년', '2학년', '3학년', '4학년 이상'],
       genders,
       onSubmit() {
@@ -293,6 +333,7 @@ export default {
             sex: genders.indexOf(targetGender.value),
             department: departmentList.value.filter(item => item.name === department.value)[0].id,
             category: categoryList.value.filter(item => item.name === category.value)[0].id,
+            lecturer_id: lectureList.value.filter(item => item.real_name === lecturer.value)[0].id,
           };
           console.log(JSON.stringify(data));
           api.post('/programs/', JSON.stringify(data), {headers: {'Authorization': `Token ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'}}).then(
@@ -303,6 +344,7 @@ export default {
                 icon: 'check',
                 message: '새로운 프로그램을 생성했습니다.',
               })
+              window.location.href = '/admin'
             }
           )
         }

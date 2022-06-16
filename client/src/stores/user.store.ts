@@ -10,12 +10,13 @@ export type UserState = {
 export const useUserStore = defineStore({
   id: 'userStore',
   state: () => ({user: {
-    username: '', email: '', groups: [], telephone: '', departments: [], firstname: '', lastname: '',
+    username: '', email: '', real_name: '', groups: [], telephone: '', departments: [], majors: []
   }, success: true} as UserState),
   actions: {
     async fetchUser() {
       try{
         const response = await api.get('/user/info', {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}})
+        console.log(response.data)
         this.user = response.data
       } catch (e) {
         console.log(e);
@@ -25,7 +26,7 @@ export const useUserStore = defineStore({
     },
     async logout() {
       this.user = {
-        username: '', email: '', groups: [], telephone: '', departments: [], firstname: '', lastname: '',
+        username: '', email: '', real_name: '', groups: [], telephone: '', departments: [], majors: []
       } as UserItem;
       localStorage.removeItem('token');
       window.location.href = '/login';

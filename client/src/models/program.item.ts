@@ -1,19 +1,19 @@
+import {UserItem} from "src/models/user.item";
+
 export interface ProgramItem {
-  title: string;
-  target_people: string;
-  target_grade: string;
-  target_gender: string;
-  target_major: string;
-  mileage: number;
-  apply_start_date: Date;
-  apply_end_date: Date;
-  start_date: Date;
-  end_date: Date;
-  place: string;
-  current_people: number;
-  max_people: number;
+  id: number;
+  name: string;
+  category: number;
+  lecturer: UserItem;
   description: string;
-  teacher_name: string;
-  teacher_email: string;
-  teacher_phone: string;
+  apply_start_at: number;
+  apply_end_at: number;
+  program_start_at: number;
+  program_end_at: number;
+  thumbnail_url: string;
+  target_grade: string;
+  location: string;
+  recent_applicant_count: number;
+  max_applicant_count: number;
+  sex: number;
 }

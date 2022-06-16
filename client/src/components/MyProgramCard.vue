@@ -39,9 +39,14 @@
             <q-item-section class="col-8">{{program.recent_applicant_count}} / {{program.max_applicant_count}}</q-item-section>
           </q-item>
           <q-item>
-            <q-item-section class="col-12">
-              <q-btn rounded style="background-color: #5B5D60; color: white; padding: 15px" @click="dialogOpen">
-                신청하기
+            <q-item-section class="col-6">
+              <q-btn rounded style="background-color: red; color: white; padding: 15px" @click="cancelProgram">
+                취소하기
+              </q-btn>
+            </q-item-section>
+            <q-item-section class="col-6">
+              <q-btn rounded style="background-color: #5B5D60; color: white; padding: 15px" @click="goToAttendancePage">
+                출석하기
               </q-btn>
             </q-item-section>
           </q-item>
@@ -52,9 +57,11 @@
 </template>
 
 <script>
+
+import {api} from 'boot/axios';
+
 export default {
-  name: 'ProgramCard',
-  emits: ['dialog-open', 'info-open'],
+  name: 'MyProgramCard',
   props: {
     program: {
       type: Object,
@@ -62,17 +69,21 @@ export default {
     }
   },
   setup(props, {emit}) {
-    console.log(props.program);
-
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const sexDict = {0: '전체', 1: '남자', 2: '여자'};
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
     const targetDate = `${koreanDate(new Date(props.program.program_start_at * 1000))} ~ ${koreanDate(new Date(props.program.program_end_at * 1000))}`
     const applyDate = `${koreanDate(new Date(props.program.apply_start_at * 1000))} ~ ${koreanDate(new Date(props.program.apply_end_at * 1000))}`
-    function dialogOpen() {
-      emit('dialog-open', props.program);
+    function cancelProgram() {
+      api.post(`/programs/${props.program.id}/cancel/`, {}, {headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(() => {
+        emit('cancel-program');
+      });
     }
-    return {sexDict, applyDate, targetDate, dialogOpen}
+    function goToAttendancePage() {
+      window.location.href = `/program/${props.program.id}/attendance`;
+    }
+
+    return {sexDict, applyDate, targetDate, cancelProgram, goToAttendancePage}
   }
 }
 </script>

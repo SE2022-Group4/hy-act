@@ -7,11 +7,11 @@
     </q-card-section>
 
     <q-separator color="gray" size="2px" inset></q-separator>
-    <q-card-section style="padding: 0px; max-height: 65vh" class="scroll">
+    <q-card-section style="padding: 0; max-height: 65vh" class="scroll">
       <div class="row">
         <!--Program Image-->
         <div class="col-6">
-          <q-img :src="url" spinner-color="white" style="max-height: 300px; max-width: 350px"></q-img>
+          <q-img :src="program.thumbnail_url" spinner-color="white" style="max-height: 300px; max-width: 350px"></q-img>
         </div>
         <!-- Program Info -->
         <div class="col-6">
@@ -31,7 +31,7 @@
               line-height: 25px;
             "><strong>장소</strong></div>
           <p style="text-align: center; line-height: 15px">
-            {{ program.place }}
+            {{ program.location }}
           </p>
         </div>
       </div>
@@ -53,21 +53,15 @@
             <strong>신청자 정보</strong>
           </div>
           <p style="padding-top: 12px; line-height: 15px">
-            <strong>이름 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 하냥이
+            <strong>이름 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> {{ user.real_name }}
           </p>
           <p style="line-height: 15px">
             <strong>학과 &nbsp;&nbsp; : &nbsp;&nbsp; </strong>
-            소프트웨어학부
-          </p>
-          <p style="line-height: 15px">
-            <strong>신분 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 재학생
-          </p>
-          <p style="line-height: 15px">
-            <strong>학년 &nbsp;&nbsp; : &nbsp;&nbsp; </strong> 4학년
+            {{ user.majors[0].name }}
           </p>
           <p style="line-height: 15px">
             <strong>전화번호 &nbsp;&nbsp; : &nbsp;&nbsp; </strong>
-            010-1234-5678
+            {{ user.telephone }}
           </p>
         </div>
         <q-separator
@@ -107,13 +101,14 @@
     </q-card-section>
     <q-separator inset></q-separator>
     <q-card-actions align="right">
-      <div class="row" style="padding: 0px">
+      <div class="row" style="padding: 0">
         <q-btn
           class="items-center"
           unelevated
           rounded
           color="grey-9"
           label="&nbsp;&nbsp;신청하기&nbsp;&nbsp;"
+          @click="apply"
         ></q-btn>
       </div>
       <q-btn flat label="닫기" color="primary" v-close-popup></q-btn>
@@ -134,27 +129,71 @@
 </style>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
+import {api} from 'boot/axios';
+import {useQuasar} from 'quasar';
 
 export default defineComponent({
   name: 'ProgramApplyDialog',
   props: {
+    user: {
+      type: Object,
+      required: true,
+    },
     program: {
       type: Object,
       required: true,
     },
   },
-  setup(props) {
-    const url = ref('src/assets/plagiarism.png');
+  emits: ['close'],
+  setup(props, {emit}) {
+    const $q = useQuasar();
     const zero = num => num < 10 && num >= 0 ? '0' + num : num;
     const koreanDate = date => `${date.getFullYear()}년 ${zero(date.getMonth() + 1)}월 ${zero(date.getDate())}일 ${zero(date.getHours())}:${zero(date.getMinutes())}`;
-    const startDate = koreanDate(props.program.start_date);
-    const endDate = koreanDate(props.program.end_date);
+    const startDate = koreanDate(new Date(props.program.program_start_at * 1000));
+    const endDate = koreanDate(new Date(props.program.program_end_at * 1000));
+    async function apply () {
+      api.post(`/programs/${props.program.id}/apply/`, {},{headers: {'Authorization': `Token ${localStorage.getItem('token')}`}}).then(
+        res => {
+          if(res.status === 200) {
+            $q.notify({
+              color: 'green-5',
+              textColor: 'white',
+              message: '정상적으로 신청되었습니다.',
+            });
+            emit('close');
+          }
+        },
+        err => {
+          if(err.response.status === 400) {
+            $q.dialog({
+              title: '신청 실패',
+              message: '이미 신청한 프로그램입니다.',
+              color: 'negative',
+              buttons: [
+                {
+                  label: '확인',
+                  color: 'negative',
+                  handler: () => {
+                    emit('close');
+                  },
+                },
+              ],
+            });
+          } else {
+            $q.notify({
+              color: 'red-5',
+              textColor: 'white',
+              message: '신청에 실패하였습니다.',
+            });
+          }
+        }
+      )
+    }
     return {
-      props,
       startDate,
       endDate,
-      url,
+      apply,
     };
   },
 });
