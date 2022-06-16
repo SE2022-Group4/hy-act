@@ -107,7 +107,7 @@ export default defineComponent({
       }
 
       const now = new Date();
-      if(now.getTime() < program.apply_start_at || now.getTime() > program.apply_end_at) {
+      if(now.getTime() < program.apply_start_at * 1000 || now.getTime() > program.apply_end_at * 1000) {
         $q.dialog({
           title: '신청 제한',
           message: '신청 기간이 아닙니다.',
