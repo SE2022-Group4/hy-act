@@ -13,7 +13,8 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2022-06-10T15:45:12Z",
-        "telephone": "",
+        "real_name": "이정인",
+        "telephone": "010-1234-1234",
         "groups": [
             2
         ],
@@ -38,7 +39,8 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2022-06-10T15:45:35Z",
-        "telephone": "",
+        "real_name": "김종헌",
+        "telephone": "010-9999-9999",
         "groups": [
             1
         ],
@@ -63,7 +65,8 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2022-06-10T15:46:30Z",
-        "telephone": "",
+        "real_name": "김예준",
+        "telephone": "010-0000-0000",
         "groups": [
             3
         ],
